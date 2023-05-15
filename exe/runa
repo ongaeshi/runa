@@ -1,5 +1,45 @@
 #!/usr/bin/env ruby
 
 require "runa"
+require "thor"
+require "fileutils"
 
-p "runa"
+class RunaCli < Thor
+  def self.exit_on_failure?
+    true
+  end
+
+  desc "new NAME", "Create a new application"
+  def new(name)
+    if FileTest.exist?(name)
+      raise Thor::Error, "ERROR: '#{File.absolute_path(name)}' already exists"
+    end
+
+    module_name = name.split("_").map { |e| e.capitalize }.join
+
+    FileUtils.mkdir_p(name)
+    Dir.chdir(name) do
+      FileUtils.mkdir_p(".bundle")
+      File.write(".bundle/config", "---\nBUNDLE_PATH: \"vendor/bundle\"\n")
+      FileUtils.mkdir_p("lib/#{name}")
+      File.write("lib/#{name}.rb", "require \"#{name}/lib\"\n")
+      File.write("lib/#{name}/lib.rb", "module #{module_name}\nend\n")
+      File.write(".gitignore", "/vendor\n")
+      File.write("Gemfile", "# frozen_string_literal: true\n\nsource \"https://rubygems.org\"\n\n# gem \"rails\"\n")
+      File.write("main.rb", "require \"#{name}\"\n\nputs \"Hello, world!\"")
+    end
+  end
+
+  desc "install", "Install gems"
+  def install
+    system("bundle install")
+  end
+
+  desc "run [ARGS]", "Run application with arguments"
+  def run_command(*args)
+    system("bundle exec ruby -Ilib main.rb #{args.join(" ")}")
+  end
+  map "run" => "run_command"
+end
+
+RunaCli.start(ARGV)
