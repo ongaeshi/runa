@@ -59,9 +59,9 @@ class RunaCli < Thor
 
   def release_script(root_dir)
     # TODO: Linux
-    lib_dir = File.join(root_dir, "lib").gsub("/", "\\")
-    runa_dir = File.join(root_dir, RUNA_DIR).gsub("/", "\\")
-    main_rb = File.join(root_dir, "main.rb").gsub("/", "\\")
+    lib_dir = File.join(root_dir, "lib").tr("/", "\\")
+    runa_dir = File.join(root_dir, RUNA_DIR).tr("/", "\\")
+    main_rb = File.join(root_dir, "main.rb").tr("/", "\\")
 
     <<~EOS
       @ECHO OFF
