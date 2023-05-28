@@ -47,6 +47,7 @@ class RunaCli < Thor
     release_script_name = File.basename(root_dir)
     FileUtils.mkdir_p(RUNA_DIR)
     Dir.chdir(RUNA_DIR) do
+      File.write("runa_load_path.rb", load_path_script)
       path = "#{release_script_name}.bat"
       File.write(path, release_script(root_dir))
       puts "'#{File.join(root_dir, RUNA_DIR, path)}' generated. It can be copied to any location."
@@ -67,6 +68,12 @@ class RunaCli < Thor
       @ECHO OFF
       @ruby -I"#{lib_dir}" -I"#{runa_dir}" -rruna_load_path #{main_rb} %*"
     EOS
+  end
+
+  def load_path_script
+    str = `bundle exec ruby -e 'puts \$LOAD_PATH.grep(/vendor\\/bundle/)'`
+    paths = str.split("\n").map {|e| '"' + e + '"'}.join(',')
+    "$LOAD_PATH.unshift(#{paths})\n"
   end
 end
 
