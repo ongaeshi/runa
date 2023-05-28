@@ -72,7 +72,7 @@ class RunaCli < Thor
 
   def load_path_script
     str = `bundle exec ruby -e 'puts \$LOAD_PATH.grep(/vendor\\/bundle/)'`
-    paths = str.split("\n").map {|e| '"' + e + '"'}.join(',')
+    paths = str.split("\n").map { |e| "\"#{e}\"" }.join(",")
     "$LOAD_PATH.unshift(#{paths})\n"
   end
 end
