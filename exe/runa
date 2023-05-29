@@ -41,15 +41,15 @@ class RunaCli < Thor
   end
   map "run" => "run_command"
 
-  desc "release", "Release scripts for production execution"
-  def release
+  desc "generate", "Generate scripts for production execution"
+  def generate
     root_dir = File.expand_path(".")
-    release_script_name = File.basename(root_dir)
+    generate_script_name = File.basename(root_dir)
     FileUtils.mkdir_p(RUNA_DIR)
     Dir.chdir(RUNA_DIR) do
       File.write("runa_load_path.rb", load_path_script)
-      path = "#{release_script_name}.bat"
-      File.write(path, release_script(root_dir))
+      path = "#{generate_script_name}.bat"
+      File.write(path, generate_script(root_dir))
       puts "'#{File.join(root_dir, RUNA_DIR, path)}' generated. It can be copied to any location."
     end
   end
@@ -58,7 +58,7 @@ class RunaCli < Thor
 
   RUNA_DIR = ".runa"
 
-  def release_script(root_dir)
+  def generate_script(root_dir)
     # TODO: Linux
     lib_dir = File.join(root_dir, "lib").tr("/", "\\")
     runa_dir = File.join(root_dir, RUNA_DIR).tr("/", "\\")
