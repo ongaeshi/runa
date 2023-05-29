@@ -33,6 +33,7 @@ class RunaCli < Thor
   desc "install", "Install gems"
   def install
     system("bundle install")
+    generate_load_path_script
   end
 
   desc "run [ARGS]", "Run application with arguments"
@@ -46,12 +47,10 @@ class RunaCli < Thor
     root_dir = File.expand_path(".")
     generate_script_name = File.basename(root_dir)
     FileUtils.mkdir_p(RUNA_DIR)
-    Dir.chdir(RUNA_DIR) do
-      File.write("runa_load_path.rb", load_path_script)
-      path = "#{generate_script_name}.bat"
-      File.write(path, generate_script(root_dir))
-      puts "'#{File.join(root_dir, RUNA_DIR, path)}' generated. It can be copied to any location."
-    end
+    generate_load_path_script
+    path = File.join(RUNA_DIR, "#{generate_script_name}.bat")
+    File.write(path, generate_script(root_dir))
+    puts "Generate '#{path}'\n'#{path}' is the script to run. Copy it to any location and use it."
   end
 
   private
@@ -68,6 +67,12 @@ class RunaCli < Thor
       @ECHO OFF
       @ruby -I"#{lib_dir}" -I"#{runa_dir}" -rruna_load_path #{main_rb} %*"
     EOS
+  end
+
+  def generate_load_path_script
+    path = "#{RUNA_DIR}/runa_load_path.rb"
+    File.write(path, load_path_script)
+    puts "Generate '#{path}'"
   end
 
   def load_path_script
