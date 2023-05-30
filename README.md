@@ -29,3 +29,12 @@ Run application.
 ```
 $ runa run
 ```
+
+Generate scripts for production execution.
+
+```
+$ runa gen
+Generate '.runa/runa_load_path.rb'
+Generate '.runa/runa_app.bat'
+'.runa/runa_app.bat' is the script to run. Copy it to any location and use it.
+```

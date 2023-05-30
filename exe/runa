@@ -52,6 +52,7 @@ class RunaCli < Thor
     File.write(path, generate_script(root_dir))
     puts "Generate '#{path}'\n'#{path}' is the script to run. Copy it to any location and use it."
   end
+  map "gen" => "generate"
 
   private
 
