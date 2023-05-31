@@ -67,7 +67,7 @@ class RunaCli < Thor
 
     <<~EOS
       @ECHO OFF
-      @ruby -I"#{lib_dir}" -I"#{runa_dir}" -rruna_load_path #{main_rb} %*"
+      @ruby -I"#{lib_dir}" -I"#{runa_dir}" -rruna_load_path #{main_rb} %*
     EOS
   end
 
