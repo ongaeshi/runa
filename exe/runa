@@ -3,6 +3,7 @@
 require "runa"
 require "thor"
 require "fileutils"
+require "os"
 
 class RunaCli < Thor
   def self.exit_on_failure?
@@ -49,7 +50,8 @@ class RunaCli < Thor
     root_dir = File.expand_path(".")
     generate_script_name = File.basename(root_dir)
     generate_load_path_script
-    path = File.join(RUNA_DIR, "#{generate_script_name}.bat")
+    path = File.join(RUNA_DIR, generate_script_name)
+    path += ".bat" if OS.windows?
     File.write(path, generate_script(root_dir))
     puts "Generate '#{path}'\n'#{path}' is the script to run. Copy it to any location and use it."
   end
@@ -60,15 +62,25 @@ class RunaCli < Thor
   RUNA_DIR = ".runa"
 
   def generate_script(root_dir)
-    # TODO: Linux
-    lib_dir = File.join(root_dir, "lib").tr("/", "\\")
-    runa_dir = File.join(root_dir, RUNA_DIR).tr("/", "\\")
-    main_rb = File.join(root_dir, "main.rb").tr("/", "\\")
+    lib_dir = File.join(root_dir, "lib")
+    runa_dir = File.join(root_dir, RUNA_DIR)
+    main_rb = File.join(root_dir, "main.rb")
 
-    <<~EOS
-      @ECHO OFF
-      @ruby -I"#{lib_dir}" -I"#{runa_dir}" -rruna_load_path #{main_rb} %*
-    EOS
+    if OS.windows?
+      lib_dir = lib_dir.tr("/", "\\")
+      runa_dir = runa_dir.tr("/", "\\")
+      main_rb = main_rb.tr("/", "\\")
+
+      <<~EOS
+        @ECHO OFF
+        @ruby -I"#{lib_dir}" -I"#{runa_dir}" -rruna_load_path #{main_rb} %*
+      EOS
+    else
+      <<~EOS
+        #!/bin/sh
+        ruby -I"#{lib_dir}" -I"#{runa_dir}" -rruna_load_path #{main_rb} $@
+      EOS
+    end
   end
 
   def generate_load_path_script
