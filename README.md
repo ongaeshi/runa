@@ -28,13 +28,38 @@ Run application.
 
 ```
 $ runa run
+Hello, World!
 ```
 
 Generate scripts for production execution.
 
+Mac/Linux/WSL
+
 ```
 $ runa gen
+Generate '.runa/runa_app'
+'.runa/runa_app' is the script to run. Copy it to any location and use it.
+
+$ chmod +x .runa/runa_app
+
+$ cp .runa/runa_app path/to/bin
+
+$ runa_app
+Hello, World!
+```
+
+Windows
+
+```
+PS> runa gen
 Generate '.runa/runa_load_path.rb'
 Generate '.runa/runa_app.bat'
 '.runa/runa_app.bat' is the script to run. Copy it to any location and use it.
+
+PS> cp .runa\runa_app.bat path\to\bin
+
+PS> runa_app
+Hello, world!
 ```
+
+
