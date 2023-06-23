@@ -36,7 +36,7 @@ class RunaCli < Thor
   desc "install", "Install gems"
   def install
     system("bundle install")
-    generate_load_path_script
+    deploy_load_path_script
   end
 
   desc "run [ARGS]", "Run application with arguments"
@@ -45,23 +45,22 @@ class RunaCli < Thor
   end
   map "run" => "run_command"
 
-  desc "generate", "Generate scripts for production execution"
-  def generate
+  desc "deploy", "Deploy scripts for production execution"
+  def deploy
     root_dir = File.expand_path(".")
-    generate_script_name = File.basename(root_dir)
-    generate_load_path_script
-    path = File.join(RUNA_DIR, generate_script_name)
+    deploy_script_name = File.basename(root_dir)
+    deploy_load_path_script
+    path = File.join(RUNA_DIR, deploy_script_name)
     path += ".bat" if OS.windows?
-    File.write(path, generate_script(root_dir))
+    File.write(path, deploy_script(root_dir))
     puts "Generate '#{path}'\n'#{path}' is the script to run. Copy it to any location and use it."
   end
-  map "gen" => "generate"
 
   private
 
   RUNA_DIR = ".runa"
 
-  def generate_script(root_dir)
+  def deploy_script(root_dir)
     lib_dir = File.join(root_dir, "lib")
     runa_dir = File.join(root_dir, RUNA_DIR)
     main_rb = File.join(root_dir, "main.rb")
@@ -83,7 +82,7 @@ class RunaCli < Thor
     end
   end
 
-  def generate_load_path_script
+  def deploy_load_path_script
     path = "#{RUNA_DIR}/runa_load_path.rb"
     File.write(path, load_path_script)
     puts "Generate '#{path}'"
