@@ -35,6 +35,12 @@ class RunaCli < Thor
     puts "Created '#{name}' application."
   end
 
+  desc "gem_add", "Add gems"
+  def gem_add(*gems)
+    system("bundle add #{gems.join(" ")}")
+    deploy_load_path_script
+  end
+
   desc "install", "Install gems"
   def install
     system("bundle install")
