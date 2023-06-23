@@ -24,6 +24,18 @@ If you need a gem, Write it in the `Gemfile`.
 ```
 $ code Gemfile
 $ runa install
+.
+.
+Generate '.runa/runa_load_path.rb'
+```
+
+Or use gem_add command.
+
+```
+$ runa gem_add launchy
+.
+.
+Generate '.runa/runa_load_path.rb'
 ```
 
 ### Run application
