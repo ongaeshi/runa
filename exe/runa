@@ -31,6 +31,8 @@ class RunaCli < Thor
       File.write("Gemfile", "# frozen_string_literal: true\n\nsource \"https://rubygems.org\"\n\n# gem \"rails\"\n")
       File.write("main.rb", "require \"#{name}\"\n\nputs \"Hello, world!\"")
     end
+
+    puts "Created '#{name}' application."
   end
 
   desc "install", "Install gems"

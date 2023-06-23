@@ -14,6 +14,7 @@ $ gem install runa
 
 ```
 $ runa new runa_app
+Created 'runa_app' application.
 $ cd runa_app
 ```
 
