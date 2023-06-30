@@ -56,10 +56,15 @@ class RunaCli < Thor
   desc "deploy SCRIPT_FILE DEPLOY_PATH", "Deploy scripts for production execution"
   def deploy(script_file, deploy_path)
     root_dir = File.expand_path(".")
-    deploy_script_name = File.basename(script_file, ".*")
     deploy_load_path_script
-    path = File.join(deploy_path, deploy_script_name)
-    path += ".bat" if OS.windows?
+    path = nil
+    if File.directory?(deploy_path)
+      deploy_script_name = File.basename(script_file, ".*")
+      path = File.join(deploy_path, deploy_script_name)
+      path += ".bat" if OS.windows?
+    else
+      path = deploy_path
+    end
     if !File.exist?(path)
       File.write(path, deploy_script(root_dir, script_file))
       puts "Deploy execution script to '#{path}'."
