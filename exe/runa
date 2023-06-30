@@ -35,7 +35,7 @@ class RunaCli < Thor
     puts "Created '#{name}' application."
   end
 
-  desc "gem_add", "Add gems"
+  desc "gem_add [GEMS]", "Add gems"
   def gem_add(*gems)
     system("bundle add #{gems.join(" ")}")
     deploy_load_path_script
@@ -48,30 +48,30 @@ class RunaCli < Thor
   end
 
   desc "run SCRIPT_FILE [ARGS]", "Run application with arguments"
-  def run_command(script_name, *args)
-    system("bundle exec ruby -Ilib #{script_name} #{args.join(" ")}")
+  def run_command(script_file, *args)
+    system("bundle exec ruby -Ilib #{script_file} #{args.join(" ")}")
   end
   map "run" => "run_command"
 
-  desc "deploy", "Deploy scripts for production execution"
-  def deploy
+  desc "deploy SCRIPT_FILE DEPLOY_PATH", "Deploy scripts for production execution"
+  def deploy(script_file, deploy_path)
     root_dir = File.expand_path(".")
-    deploy_script_name = File.basename(root_dir)
+    deploy_script_name = File.basename(script_file, ".*")
     deploy_load_path_script
-    path = File.join(RUNA_DIR, deploy_script_name)
+    path = File.join(deploy_path, deploy_script_name)
     path += ".bat" if OS.windows?
-    File.write(path, deploy_script(root_dir))
-    puts "Generate '#{path}'\n'#{path}' is the script to run. Copy it to any location and use it."
+    File.write(path, deploy_script(root_dir, script_file))
+    puts "Deploy execution script to '#{path}'."
   end
 
   private
 
   RUNA_DIR = ".runa"
 
-  def deploy_script(root_dir)
+  def deploy_script(root_dir, script_file)
     lib_dir = File.join(root_dir, "lib")
     runa_dir = File.join(root_dir, RUNA_DIR)
-    main_rb = File.join(root_dir, "main.rb")
+    main_rb = File.join(root_dir, script_file)
 
     if OS.windows?
       lib_dir = lib_dir.tr("/", "\\")
