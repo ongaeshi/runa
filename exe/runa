@@ -29,7 +29,7 @@ class RunaCli < Thor
       File.write("lib/#{name}/lib.rb", "module #{module_name}\nend\n")
       File.write(".gitignore", "/vendor/\n/.runa/*\n!/.runa/.gitkeep\n")
       File.write("Gemfile", "# frozen_string_literal: true\n\nsource \"https://rubygems.org\"\n\n# gem \"rails\"\n")
-      File.write("main.rb", "require \"#{name}\"\n\nputs \"Hello, world!\"")
+      File.write("#{name}.rb", "require \"#{name}\"\n\nputs \"Hello, world!\"")
     end
 
     puts "Created '#{name}' application."
