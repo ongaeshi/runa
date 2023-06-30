@@ -47,9 +47,9 @@ class RunaCli < Thor
     deploy_load_path_script
   end
 
-  desc "run [ARGS]", "Run application with arguments"
-  def run_command(*args)
-    system("bundle exec ruby -Ilib main.rb #{args.join(" ")}")
+  desc "run SCRIPT_FILE [ARGS]", "Run application with arguments"
+  def run_command(script_name, *args)
+    system("bundle exec ruby -Ilib #{script_name} #{args.join(" ")}")
   end
   map "run" => "run_command"
 

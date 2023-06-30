@@ -41,7 +41,7 @@ Generate '.runa/runa_load_path.rb'
 ### Run application
 
 ```
-$ runa run
+$ runa run runa_app.rb
 Hello, World!
 ```
 
