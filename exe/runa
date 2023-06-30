@@ -60,8 +60,13 @@ class RunaCli < Thor
     deploy_load_path_script
     path = File.join(deploy_path, deploy_script_name)
     path += ".bat" if OS.windows?
-    File.write(path, deploy_script(root_dir, script_file))
-    puts "Deploy execution script to '#{path}'."
+    if !File.exist?(path)
+      File.write(path, deploy_script(root_dir, script_file))
+      puts "Deploy execution script to '#{path}'."
+    else
+      puts "Error: '#{path}' is already exists."
+      exit(1)
+    end
   end
 
   private
